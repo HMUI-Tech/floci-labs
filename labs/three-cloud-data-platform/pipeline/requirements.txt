@@ -1,0 +1,14 @@
+# Pinned to the versions this lab was tested with. Faker is pinned on purpose:
+# a different version can generate different names, which changes the data.
+faker==40.44.0
+pyarrow==26.0.1
+
+# GCP
+google-cloud-storage==3.17.1
+google-cloud-pubsub==2.43.0
+
+# Azure
+azure-storage-file-datalake==12.26.1
+
+# AWS
+boto3==1.43.126

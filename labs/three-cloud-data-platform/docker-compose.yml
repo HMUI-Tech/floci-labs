@@ -1,0 +1,56 @@
+# Local AWS, Azure and GCP emulators (Floci), all three side by side.
+#   Start:  docker compose up -d
+#   Stop:   docker compose down
+# State is saved in ./floci-data between restarts. Delete that folder to start fresh.
+# To keep it somewhere else, set FLOCI_DATA_DIR (for example in a .env file next to this one).
+
+name: floci
+
+services:
+  aws:
+    image: floci/floci:latest
+    container_name: floci-aws
+    user: root # needed to use the Docker socket
+    ports:
+      - "4566:4566"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Lambda, RDS, ECS, etc. run as real containers
+      - ${FLOCI_DATA_DIR:-./floci-data}/aws:/app/data
+    environment:
+      FLOCI_STORAGE_MODE: hybrid # in memory, saved to disk every ~5s
+      FLOCI_STORAGE_PERSISTENT_PATH: /app/data
+      FLOCI_SERVICES_DOCKER_NETWORK: floci-net
+      FLOCI_SERVICES_UI_CONTAINER_NAME: floci-aws-ui # web console on http://localhost:4566/_floci/ui
+    networks: [floci-net]
+
+  azure:
+    image: floci/floci-az:latest
+    container_name: floci-az
+    ports:
+      - "4577:4577"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Functions, Cosmos engines, AKS, etc.
+      - ${FLOCI_DATA_DIR:-./floci-data}/azure:/app/data
+    environment:
+      FLOCI_AZ_STORAGE_MODE: hybrid
+      FLOCI_AZ_TLS_ENABLED: "true" # serves HTTPS as well as HTTP on 4577; Terraform azurerm and Key Vault SDKs need it
+      FLOCI_AZ_UI_PORT: "4501" # the AWS console already uses 4500
+    networks: [floci-net]
+
+  gcp:
+    image: floci/floci-gcp:latest
+    container_name: floci-gcp
+    ports:
+      - "4588:4588"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Cloud Run, Cloud SQL, Kafka, GKE, BigQuery
+      - ${FLOCI_DATA_DIR:-./floci-data}/gcp:/app/data
+    environment:
+      FLOCI_GCP_STORAGE_MODE: hybrid
+      FLOCI_GCP_STORAGE_PERSISTENT_PATH: /app/data
+      FLOCI_GCP_SERVICES_DOCKER_NETWORK: floci-net
+    networks: [floci-net]
+
+networks:
+  floci-net:
+    name: floci-net

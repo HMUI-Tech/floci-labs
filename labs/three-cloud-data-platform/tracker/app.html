@@ -1,0 +1,1212 @@
+<title>Cloud Learning Tracker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A six-month, hands-on plan for data engineering, data integration and solutions architecture across AWS, Azure and GCP, with progress saved in your browser.">
+<style>
+:root {
+  /* Layout: sticky tab bar over a 1120px column. Overview = hero, summary strip, three cloud cards side by side, track map, phases, shared milestones, settings. Cloud page = header, progress report, schedule grouped by phase and two-week block. */
+  --bg: #f1f3f2;
+  --surface: #ffffff;
+  --surface-2: #e8ecea;
+  --ink: #16201c;
+  --muted: #56625d;
+  --line: #d3dad6;
+  --aws: #b45309;
+  --azure: #1d5fc4;
+  --gcp: #0b7d70;
+  --aws-soft: #f6e6d3;
+  --azure-soft: #dde8f8;
+  --gcp-soft: #d5ece8;
+  --on-color: #ffffff;
+  --warn: #b42318;
+  --warn-soft: #fbe6e3;
+  --focus: #1d5fc4;
+  --code-bg: #14201c;
+  --code-ink: #dbe6e1;
+  --font-display: "Bahnschrift", "DIN Alternate", "DIN Next LT Pro", "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Mono", "Cascadia Code", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --radius: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1513; --surface: #161e1b; --surface-2: #1f2a26; --ink: #e4ece8; --muted: #97a5a0; --line: #2a3631;
+    --aws: #f0a050; --azure: #7aa8ff; --gcp: #3cc7b4;
+    --aws-soft: #3a2915; --azure-soft: #182945; --gcp-soft: #113430;
+    --on-color: #0e1412; --warn: #ff8f80; --warn-soft: #3b1b17; --focus: #7aa8ff; --code-bg: #0a0f0d; --code-ink: #dbe6e1;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1513; --surface: #161e1b; --surface-2: #1f2a26; --ink: #e4ece8; --muted: #97a5a0; --line: #2a3631;
+  --aws: #f0a050; --azure: #7aa8ff; --gcp: #3cc7b4;
+  --aws-soft: #3a2915; --azure-soft: #182945; --gcp-soft: #113430;
+  --on-color: #0e1412; --warn: #ff8f80; --warn-soft: #3b1b17; --focus: #7aa8ff; --code-bg: #0a0f0d; --code-ink: #dbe6e1;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font-body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+a { color: inherit; }
+p { margin: 0; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font: 600 clamp(30px, 4.6vw, 46px)/1.08 var(--font-display); letter-spacing: -0.01em; }
+h2 { font: 600 23px/1.2 var(--font-display); letter-spacing: 0; }
+h3 { font-size: 16px; line-height: 1.3; font-weight: 650; }
+code { font: 12.5px/1.4 var(--font-mono); background: var(--surface-2); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.wrap { max-width: 1120px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font: 600 11.5px/1.3 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.sub { color: var(--muted); font-size: 13.5px; }
+.mono { font-family: var(--font-mono); font-size: 12.5px; }
+
+/* Top bar */
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.topbar-inner { display: flex; align-items: center; gap: 16px; min-height: 58px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font: 600 17px/1 var(--font-display); white-space: nowrap; }
+.brand-mark { display: grid; gap: 3px; width: 20px; }
+.brand-mark i { display: block; height: 4px; border-radius: 2px; }
+.brand-mark i:nth-child(1) { background: var(--aws); width: 100%; }
+.brand-mark i:nth-child(2) { background: var(--azure); width: 70%; }
+.brand-mark i:nth-child(3) { background: var(--gcp); width: 85%; }
+.tabs { display: flex; gap: 4px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; color: var(--muted); text-decoration: none; font-weight: 600; font-size: 14px; white-space: nowrap; }
+.tabs a:hover { color: var(--ink); background: var(--surface-2); }
+.tabs a[aria-current="page"] { color: var(--ink); background: var(--surface-2); box-shadow: inset 0 -2px 0 var(--c, var(--ink)); }
+.tabs a i { width: 9px; height: 9px; border-radius: 2px; background: var(--c); }
+
+main.wrap { display: flex; flex-direction: column; gap: 52px; padding-block: 32px 64px; }
+main:focus { outline: none; }
+.section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; margin-bottom: 18px; }
+.section-head p { color: var(--muted); max-width: 62ch; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; min-width: 0; }
+
+/* Shared bits */
+.bar { height: 8px; border-radius: 99px; background: var(--c-soft, var(--surface-2)); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--c, var(--ink)); border-radius: inherit; min-width: 0; transition: width 0.3s ease; }
+.pill { display: inline-flex; align-items: center; gap: 7px; font: 600 12.5px/1 var(--font-body); padding: 6px 10px; border-radius: 99px; background: var(--surface-2); color: var(--ink); white-space: nowrap; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: 0.7; }
+.pill.behind { background: var(--warn-soft); color: var(--warn); }
+.pill.done::before, .pill.ontrack::before, .pill.ahead::before { background: var(--c, var(--ink)); opacity: 1; }
+.pill.upcoming::before { background: transparent; border: 1.5px solid currentColor; }
+.pill.now { background: var(--c); color: var(--on-c); }
+.pill.now::before { display: none; }
+.badge { display: inline-flex; align-items: center; font: 600 10.5px/1 var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; padding: 4px 6px; border-radius: 5px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.badge.lead { background: var(--c); color: var(--on-c); border-color: transparent; }
+.badge.port { color: var(--c); border-color: currentColor; }
+.badge.optional, .badge.cert, .badge.stretch { border-style: dashed; }
+.badge.overdue { color: var(--warn); border-color: var(--warn); background: var(--warn-soft); }
+.tag { font: 11.5px/1.4 var(--font-mono); color: var(--muted); background: var(--surface-2); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+.btn { font: 600 13px/1 var(--font-body); padding: 10px 13px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--muted); }
+.btn.danger { color: var(--warn); }
+.btn.danger[data-armed="true"] { background: var(--warn); color: var(--surface); border-color: var(--warn); }
+.link-btn { font: 600 12.5px/1.2 var(--font-body); background: none; border: 0; padding: 2px 0; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.link-btn:hover { color: var(--ink); }
+input[type="text"], input[type="date"], input[type="url"], textarea { font: inherit; font-size: 14px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); width: 100%; min-width: 0; }
+textarea { font-family: var(--font-mono); font-size: 12px; resize: vertical; }
+label.field { display: block; font-weight: 650; margin-bottom: 8px; }
+.hint { color: var(--muted); font-size: 13px; margin-top: 8px; }
+
+/* Overview */
+.hero { display: grid; gap: 14px; max-width: 760px; padding-top: 8px; }
+.hero .lede { color: var(--muted); font-size: 17px; max-width: 62ch; }
+.summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-top: -24px; }
+.stat { display: flex; flex-direction: column; gap: 8px; background: var(--surface); padding: 16px 18px; min-width: 0; }
+.stat strong { font: 600 26px/1.05 var(--font-display); font-variant-numeric: tabular-nums; }
+.stat strong small { font-size: 15px; color: var(--muted); font-weight: 500; }
+.stat .pill { align-self: flex-start; }
+
+.clouds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.cloud-card { display: flex; flex-direction: column; gap: 16px; padding: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; text-decoration: none; color: inherit; min-width: 0; transition: border-color 0.15s ease, transform 0.15s ease; }
+.cloud-card:hover { border-color: var(--c); transform: translateY(-2px); }
+.cloud-card:focus-visible { outline-offset: 3px; border-radius: 16px; }
+.cc-top { display: flex; align-items: center; gap: 14px; }
+.monogram { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 10px; background: var(--c); color: var(--on-c); font: 700 13px/1 var(--font-mono); letter-spacing: 0.02em; flex: none; }
+.cc-name { min-width: 0; }
+.cc-name h3 { font: 600 22px/1.1 var(--font-display); }
+.cc-name p { color: var(--muted); font-size: 13.5px; }
+.cc-pct { margin-left: auto; font: 600 30px/1 var(--font-display); font-variant-numeric: tabular-nums; color: var(--c); }
+.cc-pct small { font-size: 15px; }
+.cc-role { font-weight: 600; }
+.cc-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cc-next { display: grid; gap: 4px; padding-top: 14px; border-top: 1px solid var(--line); }
+.cc-next p { font-weight: 600; }
+.cc-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
+.cc-foot .mono { color: var(--muted); }
+.cc-open { color: var(--c); font-weight: 700; white-space: nowrap; }
+
+.tm-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.tm { display: grid; grid-template-columns: 84px repeat(13, minmax(52px, 1fr)); min-width: 760px; }
+.tm > * { min-width: 0; }
+.tm-corner { border-bottom: 1px solid var(--line); }
+.tm-phase { padding: 12px 10px 10px; border-bottom: 1px solid var(--line); border-left: 1px solid var(--line); font-weight: 650; font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.tm-lead { font: 600 10.5px/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--c); }
+.tm-week { padding: 8px 4px; text-align: center; font: 11.5px/1.2 var(--font-mono); color: var(--muted); border-bottom: 1px solid var(--line); position: relative; }
+.tm-now { display: block; font-weight: 700; color: var(--ink); margin-top: 2px; }
+.tm-label { display: flex; align-items: center; gap: 8px; padding: 0 12px; font-weight: 650; text-decoration: none; }
+.tm-label i { width: 9px; height: 9px; border-radius: 2px; background: var(--c); }
+.tm-label:hover { color: var(--c); }
+.tm-cell { display: flex; align-items: center; padding: 16px 5px; }
+.tm-week.is-now, .tm-cell.is-now { background: var(--surface-2); }
+.tm-bar { display: block; width: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--c) var(--p), var(--c-soft) var(--p)); }
+.tm-bar.lead { height: 12px; }
+.tm-bar.port { height: 5px; }
+.tm-bar.none { height: 0; border-top: 2px dotted var(--line); background: none; border-radius: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 12px; color: var(--muted); font-size: 13px; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { display: inline-block; width: 28px; border-radius: 99px; background: var(--ink); }
+.legend .l-lead { height: 10px; }
+.legend .l-port { height: 4px; }
+.legend .l-fill { height: 8px; background: linear-gradient(90deg, var(--ink) 50%, var(--surface-2) 50%); }
+.legend .l-none { height: 0; border-top: 2px dotted var(--muted); background: none; border-radius: 0; }
+
+.phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.phase-card { display: flex; flex-direction: column; gap: 12px; }
+.phase-card h3 { font: 600 19px/1.2 var(--font-display); }
+.lead-chip { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--c); }
+.lead-chip i { width: 9px; height: 9px; border-radius: 2px; background: var(--c); }
+.reading { list-style: none; margin: 0; padding: 12px 0 0; border-top: 1px solid var(--line); display: grid; gap: 6px; font-size: 13.5px; }
+.reading a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
+.reading a:hover { text-decoration-color: currentColor; }
+.cert-line { font-size: 13px; color: var(--muted); margin-top: auto; }
+
+.shared-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.group-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.group-h span { font: 12px var(--font-mono); color: var(--muted); font-weight: 400; }
+
+.settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.settings-grid .wide { grid-column: 1 / -1; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+/* Task lists */
+.tasks { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.task { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 16px 18px; }
+.task + .task { border-top: 1px solid var(--line); }
+.task-check { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--c); cursor: pointer; }
+.task-body { display: grid; gap: 7px; min-width: 0; }
+.task-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+.task-title { font-weight: 650; font-size: 15.5px; cursor: pointer; }
+.task-badges { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.task-detail { color: var(--ink); max-width: 72ch; }
+.task-dw { color: var(--muted); font-size: 14px; max-width: 72ch; }
+.task-dw span { font: 600 11px/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--c); margin-right: 4px; }
+.task-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 2px; }
+.tags { display: inline-flex; flex-wrap: wrap; gap: 5px; }
+.completed { font: 600 12px/1 var(--font-mono); color: var(--c); }
+.proof-link { font-weight: 650; font-size: 13px; color: var(--c); }
+.proof-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 4px; }
+.proof-form input { flex: 1 1 260px; }
+.form-msg { font-size: 13px; color: var(--warn); }
+.task.is-done .task-title { color: var(--muted); }
+.task.is-done .task-detail { color: var(--muted); }
+
+/* Step-by-step guides inside a task */
+.guide { border-top: 1px dashed var(--line); padding-top: 9px; margin-top: 2px; min-width: 0; }
+.guide > summary { display: inline-flex; align-items: baseline; gap: 8px; cursor: pointer; list-style: none; font-weight: 650; font-size: 14px; color: var(--c); }
+.guide > summary::-webkit-details-marker { display: none; }
+.guide > summary::before { content: "▸"; display: inline-block; transition: transform 0.15s ease; }
+.guide[open] > summary::before { transform: rotate(90deg); }
+.guide-day { font: 600 11px/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.guide-body { display: grid; gap: 10px; margin-top: 12px; max-width: 78ch; min-width: 0; font-size: 14.5px; }
+.guide-body h4 { margin: 10px 0 0; font-size: 15px; font-weight: 650; }
+.guide-body ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.g-label { font: 600 11px/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: -4px; }
+.g-code { position: relative; min-width: 0; }
+.g-code pre { margin: 0; padding: 12px 14px; padding-right: 66px; border-radius: 8px; background: var(--code-bg); color: var(--code-ink); font: 12.5px/1.55 var(--font-mono); overflow-x: auto; white-space: pre; }
+.g-out pre { background: var(--bg); color: var(--ink); border: 1px dashed var(--line); padding-right: 14px; }
+.g-copy { position: absolute; top: 7px; right: 7px; font: 600 11.5px/1 var(--font-body); padding: 6px 8px; border-radius: 6px; border: 1px solid var(--code-ink); background: transparent; color: var(--code-ink); cursor: pointer; opacity: 0.85; }
+.g-copy:hover { opacity: 1; }
+.g-try, .g-warn { border-radius: 8px; padding: 12px 14px; display: grid; gap: 8px; }
+.g-try { background: var(--c-soft); }
+.g-try .g-label { color: var(--c); }
+.g-warn { background: var(--warn-soft); }
+.g-warn .g-label { color: var(--warn); }
+
+/* Cloud page */
+.cloud-head { display: grid; gap: 18px; }
+.back { font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; justify-self: start; }
+.back:hover { color: var(--ink); }
+.cloud-title { display: flex; gap: 18px; align-items: flex-start; }
+.cloud-title .monogram { width: 58px; height: 58px; font-size: 15px; border-radius: 12px; }
+.cloud-title > div { display: grid; gap: 8px; min-width: 0; }
+.cloud-title .lede { color: var(--muted); font-size: 16.5px; max-width: 64ch; }
+
+.report { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.report-main { display: grid; gap: 16px; }
+.report-figure { display: flex; align-items: center; gap: 18px; }
+.big { font: 600 56px/1 var(--font-display); color: var(--c); font-variant-numeric: tabular-nums; }
+.big small { font-size: 24px; }
+.report-status { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.phase-rows { display: grid; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line); }
+.phase-row { display: grid; grid-template-columns: minmax(0, 1fr) auto 90px 46px; align-items: center; gap: 12px; font-size: 14px; }
+.phase-row .count { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-family: var(--font-mono); font-size: 12.5px; }
+.report-side { display: grid; gap: 16px; }
+.report-side h3 { margin-top: 6px; }
+.mini, .next, .recent { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; font-size: 14px; }
+.mini li { display: flex; gap: 10px; align-items: flex-start; }
+.mini-check { flex: none; width: 16px; height: 16px; margin-top: 2px; border-radius: 4px; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 11px; line-height: 1; color: var(--on-c); }
+.mini li.is-done .mini-check { background: var(--c); border-color: var(--c); }
+.mini li.is-done { color: var(--muted); }
+.next li, .recent li { display: grid; gap: 1px; }
+.next li span, .recent li span { font-size: 12.5px; color: var(--muted); }
+.report-side .eyebrow + .eyebrow, .recent-h { margin-top: 18px; }
+.jump { margin-top: 14px; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 600 13px/1 var(--font-body); padding: 8px 12px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.phase-group { display: grid; gap: 18px; }
+.phase-group + .phase-group { margin-top: 40px; }
+.phase-head { display: grid; gap: 6px; }
+.phase-head h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font: 600 21px/1.2 var(--font-display); }
+.block { display: grid; gap: 10px; scroll-margin-top: 80px; }
+.block-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.block-weeks { font: 600 12px/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--c); }
+.block-dates { font-size: 13px; color: var(--muted); }
+.block-title { font-weight: 650; }
+.block-count { margin-left: auto; font: 12.5px var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.block.is-now .tasks { border-color: var(--c); box-shadow: 0 0 0 1px var(--c); }
+.empty { padding: 28px; text-align: center; color: var(--muted); }
+
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pager a { display: grid; gap: 4px; padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); text-decoration: none; }
+.pager a:hover { border-color: var(--c); }
+.pager a strong { color: var(--c); font: 600 18px/1.2 var(--font-display); }
+.pager .next-link { text-align: right; }
+
+.footer { padding-block: 0 40px; color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
+.footer a { text-underline-offset: 3px; }
+
+@media (max-width: 860px) {
+  .clouds { grid-template-columns: minmax(0, 1fr); }
+  .report { grid-template-columns: minmax(0, 1fr); }
+  .shared-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .settings-grid { grid-template-columns: minmax(0, 1fr); }
+  .phase-row { grid-template-columns: minmax(0, 1fr) auto 64px 40px; }
+}
+@media (max-width: 640px) {
+  .topbar-inner { flex-wrap: wrap; gap: 4px; padding-block: 10px 6px; }
+  .tabs { margin-left: 0; width: 100%; }
+  main.wrap { gap: 40px; padding-block: 24px 48px; }
+  .summary { margin-top: -16px; }
+  .task { padding: 14px; gap: 12px; }
+  .big { font-size: 46px; }
+  .pager { grid-template-columns: minmax(0, 1fr); }
+  .pager .next-link { text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+  .cloud-card:hover { transform: none; }
+}
+</style>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#overview"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Cloud Learning Tracker</span></a>
+    <nav class="tabs" aria-label="Pages">
+      <a href="#overview" data-nav="overview">Overview</a>
+      <a href="#aws" data-nav="aws" style="--c: var(--aws)"><i aria-hidden="true"></i>AWS</a>
+      <a href="#azure" data-nav="azure" style="--c: var(--azure)"><i aria-hidden="true"></i>Azure</a>
+      <a href="#gcp" data-nav="gcp" style="--c: var(--gcp)"><i aria-hidden="true"></i>GCP</a>
+    </nav>
+  </div>
+</header>
+
+<main id="view" class="wrap" tabindex="-1">
+  <noscript><p class="panel">This tracker needs JavaScript to show your plan and save your progress.</p></noscript>
+</main>
+
+<footer class="wrap footer">
+  <span>Built hands-on against local emulators: AWS on localhost:4566, Azure on 4577, GCP on 4588 (<a href="https://floci.io" target="_blank" rel="noopener noreferrer">Floci</a>).</span>
+  <span id="storage-foot"></span>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Plan data ----------
+  // New visitors start on the Monday of the week they first open the tracker (changeable in Settings).
+  var DEFAULT_START = (function () { var d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return iso(d); })();
+  var KEY = "cloud-learning-tracker.v1";
+  var ORDER = ["aws", "azure", "gcp"];
+
+  var CLOUDS = {
+    aws: {
+      name: "AWS", full: "Amazon Web Services", mono: "AWS", endpoint: "localhost:4566 · us-east-1",
+      role: "Leads solutions architecture in months 5–6",
+      summary: "Ports the batch pipeline and the integration work in months 1–4, then leads the architecture phase: decision records, Terraform, security, reliability and cost."
+    },
+    azure: {
+      name: "Azure", full: "Microsoft Azure", mono: "AZ", endpoint: "localhost:4577 · devstoreaccount1",
+      role: "Leads data integration in months 3–4",
+      summary: "Ports the batch pipeline in months 1–2, leads integration with Service Bus, Event Hubs, change data capture and APIs in months 3–4, then ports the architecture work."
+    },
+    gcp: {
+      name: "GCP", full: "Google Cloud", mono: "GCP", endpoint: "localhost:4588 · floci-local",
+      role: "Leads data engineering in months 1–2",
+      summary: "Leads the batch pipeline in months 1–2 with Cloud Storage, BigQuery and dbt, then ports the integration and architecture work in months 3–6."
+    }
+  };
+
+  var PHASES = [
+    {
+      id: "p1", name: "Data engineering", months: "Months 1–2", from: 1, to: 4, lead: "gcp",
+      goal: "Build a reliable batch pipeline end to end: generate data, land it, model it, orchestrate it and test it.",
+      reading: [
+        { t: "Fundamentals of Data Engineering, by Reis and Housley" },
+        { t: "Data Engineering Zoomcamp (free)", u: "https://github.com/DataTalksClub/data-engineering-zoomcamp" },
+        { t: "dbt Learn (free courses)", u: "https://learn.getdbt.com" },
+        { t: "floci-gcp docs", u: "https://floci.io/floci-gcp/" }
+      ],
+      cert: "Google Cloud Professional Data Engineer"
+    },
+    {
+      id: "p2", name: "Data integration", months: "Months 3–4", from: 5, to: 8, lead: "azure",
+      goal: "Move data reliably between systems: events, streams, database changes, APIs and other clouds.",
+      reading: [
+        { t: "Designing Data-Intensive Applications, by Kleppmann" },
+        { t: "Enterprise Integration Patterns", u: "https://www.enterpriseintegrationpatterns.com" },
+        { t: "Confluent Developer courses (free)", u: "https://developer.confluent.io/courses/" },
+        { t: "floci-az docs", u: "https://floci.io/floci-az/" }
+      ],
+      cert: "Azure Developer Associate or Confluent Kafka Developer"
+    },
+    {
+      id: "p3", name: "Solutions architecture", months: "Months 5–6", from: 9, to: 12, lead: "aws",
+      goal: "Design, justify and secure the whole platform: decisions, infrastructure as code, security, reliability and cost.",
+      reading: [
+        { t: "AWS Well-Architected Framework", u: "https://aws.amazon.com/architecture/well-architected/" },
+        { t: "Azure Well-Architected Framework", u: "https://learn.microsoft.com/azure/well-architected/" },
+        { t: "Google Cloud Architecture Framework", u: "https://cloud.google.com/architecture/framework" },
+        { t: "Terraform tutorials", u: "https://developer.hashicorp.com/terraform/tutorials" }
+      ],
+      cert: "AWS Solutions Architect – Associate"
+    },
+    {
+      id: "p4", name: "Capstone", months: "Weeks 25–26", from: 13, to: 13, lead: null,
+      goal: "Polish the portfolio, practise design interviews, and try one slice on a real cloud with a budget alert.",
+      reading: [
+        { t: "floci-labs (community labs)", u: "https://github.com/floci-io/floci-labs" },
+        { t: "floci AWS docs", u: "https://floci.io/floci/" }
+      ],
+      cert: null
+    }
+  ];
+
+  var BLOCKS = [null,
+    "Land raw data", "Model the warehouse", "Orchestrate and test", "React to new files",
+    "Messaging patterns", "Streaming", "Database changes and APIs", "Cross-cloud sync and contracts",
+    "Architecture fundamentals", "Infrastructure as code", "Security and networking", "Reliability, cost and final design",
+    "Capstone"
+  ];
+
+  var TASKS = [
+    // Shared
+    { id: "sh-01", cloud: "shared", block: 1, title: "Install Python, Git and VS Code", detail: "You also need Docker Desktop (or Docker Engine) for the emulators, and Python 3.11 or newer.", done: "`python --version` and `git --version` both work in a new terminal.", tags: ["Python", "Git"] },
+    { id: "sh-02", cloud: "shared", block: 1, title: "Create the project repo", detail: "Copy this lab's `pipeline` folder to a new `orders-platform` folder, add a README and push it to GitHub. Every task from here on lands in this repo.", done: "The repo is on GitHub with a first commit.", tags: ["Git", "GitHub"] },
+    { id: "sh-03", cloud: "shared", block: 1, title: "Start the emulators and demo resources", detail: "In this lab's folder, run `docker compose up -d`, then `create-demo-resources.ps1` with PowerShell 7 (`pwsh`, which also runs on macOS and Linux).", done: "All nine `demo` resources are listed across AWS, Azure and GCP.", tags: ["Docker", "Floci"] },
+    { id: "sh-04", cloud: "shared", block: 13, title: "Record a 5-minute platform demo", detail: "Show data moving from the generator through all three clouds to the final tables, including one failure and its recovery.", done: "The recording is linked from your repo README.", tags: ["Portfolio"] },
+    { id: "sh-05", cloud: "shared", block: 13, title: "Practise three data system design questions", detail: "For example a clickstream pipeline, a database-to-lake sync and a multi-cloud data lake. Give each 45 minutes, as in an interview.", done: "Written answers with diagrams are in the repo.", tags: ["Interviews"] },
+    { id: "sh-06", cloud: "shared", block: 13, title: "Polish the portfolio", detail: "Tidy every README, pin the repo on your GitHub profile and link this tracker.", done: "Someone new can understand what you built in two minutes.", tags: ["Portfolio"] },
+    { id: "sh-07", cloud: "shared", block: 13, optional: true, kind: "stretch", title: "Contribute a lab to floci-labs", detail: "Turn one of your builds into a lab using their template and open a pull request.", done: "A pull request is open on floci-io/floci-labs.", tags: ["Open source"] },
+
+    // GCP: leads data engineering
+    { id: "gcp-01", cloud: "gcp", block: 1, title: "Connect Python to the GCP emulator", detail: "Install the Google Cloud CLI and the `google-cloud-storage` and `google-cloud-pubsub` Python clients. Load `floci-env.ps1` so they talk to localhost:4588.", done: "A script lists the `demo` bucket and the `demo` Pub/Sub topic.", tags: ["Cloud Storage", "Pub/Sub", "Python"] },
+    { id: "gcp-02", cloud: "gcp", block: 1, title: "Build an orders data generator", detail: "Generate customers, products and orders in Python with a fixed random seed, so a given day always produces the same data.", done: "`python generate.py --date 2026-11-02` writes that day's orders as JSON lines.", tags: ["Python", "Faker"] },
+    { id: "gcp-03", cloud: "gcp", block: 1, title: "Land raw data in Cloud Storage as Parquet", detail: "Convert each day to Parquet and upload it to a raw zone partitioned by date, such as `raw/orders/dt=2026-11-02/`.", done: "A week of partitions is in the bucket and the row counts match the generator.", tags: ["Cloud Storage", "Parquet"] },
+    { id: "gcp-04", cloud: "gcp", block: 2, title: "Load the raw zone into BigQuery", detail: "Create an `orders_raw` dataset in the emulator and load the Parquet files with the BigQuery Python client.", done: "Row counts per day in BigQuery match the files.", tags: ["BigQuery"] },
+    { id: "gcp-05", cloud: "gcp", block: 2, title: "Model a star schema with dbt", detail: "Build staging models and marts with dbt and DuckDB: `fact_orders`, `dim_customer`, `dim_product` and `dim_date`. Add unique, not-null and relationship tests.", done: "`dbt build` passes and a revenue-by-day query runs on the marts.", tags: ["dbt", "DuckDB", "SQL"] },
+    { id: "gcp-06", cloud: "gcp", block: 2, title: "Keep customer history (SCD Type 2)", detail: "Add a dbt snapshot so `dim_customer` keeps the old version when a customer moves.", done: "Changing one address gives two rows with valid-from and valid-to dates.", tags: ["dbt"] },
+    { id: "gcp-07", cloud: "gcp", block: 3, title: "Orchestrate the daily pipeline", detail: "Pick Airflow or Dagster and chain generate → land in Cloud Storage → load BigQuery → `dbt build` as one daily job.", done: "A full daily run succeeds from the orchestrator's UI.", tags: ["Airflow or Dagster"] },
+    { id: "gcp-08", cloud: "gcp", block: 3, title: "Make reruns and backfills safe", detail: "Make every step idempotent by overwriting the day's partition instead of appending. Then backfill 30 days.", done: "Rerunning a day leaves row counts unchanged, and the 30-day backfill completes.", tags: ["Idempotency"] },
+    { id: "gcp-09", cloud: "gcp", block: 3, title: "Add a data quality gate", detail: "Add checks with dbt tests, Great Expectations or Soda that stop the run on bad data and write the failure to Cloud Logging.", done: "Injecting bad rows stops the run, and the error shows in the emulator's logs.", tags: ["Data quality", "Cloud Logging"] },
+    { id: "gcp-10", cloud: "gcp", block: 4, title: "Process files the moment they land", detail: "When a file arrives in Cloud Storage, a Cloud Run service validates it and publishes a message to the `demo` topic, through Eventarc or a bucket notification.", done: "A good file produces a Pub/Sub message within seconds; a bad file is rejected.", tags: ["Cloud Run", "Eventarc", "Pub/Sub"] },
+    { id: "gcp-11", cloud: "gcp", block: 4, title: "Process a full month with PySpark", detail: "Compute daily revenue and customer lifetime value over every partition with a local PySpark job, then do the same in DuckDB.", done: "Both give identical numbers, and you've written down when you'd choose Spark.", tags: ["Spark", "DuckDB"] },
+    { id: "gcp-12", cloud: "gcp", block: 4, title: "Publish the phase 1 write-up", detail: "Add an architecture diagram, run instructions, key decisions and a short screen recording to the repo README.", done: "Someone else could run your pipeline from the README alone.", tags: ["Portfolio"] },
+    { id: "gcp-c1", cloud: "gcp", block: 4, optional: true, kind: "cert", title: "Google Cloud Professional Data Engineer", detail: "Book it only if this phase felt solid. Check the current exam guide first, because exams change.", done: "Exam passed.", tags: ["Certification"] },
+    { id: "gcp-13", cloud: "gcp", block: 5, title: "Carry order events on Pub/Sub", detail: "Publish the same order event to Pub/Sub with an ordering key per customer and a dead-letter topic.", done: "The consumer ignores duplicates, and malformed events land in the dead-letter topic.", tags: ["Pub/Sub"] },
+    { id: "gcp-14", cloud: "gcp", block: 6, title: "Write streaming totals to BigQuery", detail: "Consume order events from Pub/Sub or the emulator's Managed Kafka and write per-minute revenue to BigQuery.", done: "Per-minute revenue in BigQuery matches the Azure stream.", tags: ["Pub/Sub", "Managed Kafka", "BigQuery"] },
+    { id: "gcp-15", cloud: "gcp", block: 7, title: "Run the API connector on Cloud Run", detail: "Package the API connector as a container, trigger it with Cloud Scheduler and write raw JSON to Cloud Storage.", done: "A scheduled run fetches only records it hasn't seen before.", tags: ["Cloud Run", "Cloud Scheduler"] },
+    { id: "gcp-16", cloud: "gcp", block: 8, title: "Move GCP secrets to Secret Manager", detail: "Read every GCP credential and setting from Secret Manager, and check that the cross-cloud sync lands verified files in Cloud Storage.", done: "No secrets are in the repo, and synced files' checksums match the source.", tags: ["Secret Manager"] },
+    { id: "gcp-17", cloud: "gcp", block: 9, title: "Review the design with Google's framework", detail: "Map every component to its Google Cloud equivalent and review it against the Google Cloud Architecture Framework.", done: "A mapping table and at least five findings are in the repo.", tags: ["Architecture"] },
+    { id: "gcp-18", cloud: "gcp", block: 10, title: "Terraform the GCP resources", detail: "Use the Terraform `google` provider with custom endpoints pointed at the emulator.", done: "`terraform destroy` then `terraform apply` recreates the GCP resources.", tags: ["Terraform"] },
+    { id: "gcp-19", cloud: "gcp", block: 11, title: "Use least-privilege service accounts", detail: "Give each component its own service account, then turn on the emulator's IAM checks with `FLOCI_GCP_SERVICES_IAM_AUTHORIZATION_MODE=enforce`.", done: "The pipeline still runs, and a call outside a component's role is denied.", tags: ["IAM"] },
+    { id: "gcp-20", cloud: "gcp", block: 12, title: "Price the platform on Google Cloud", detail: "Estimate the monthly cost at three data volumes with the Google Cloud Pricing Calculator.", done: "A cost table with assumptions is added to the three-cloud comparison.", tags: ["Cost"] },
+    { id: "gcp-r1", cloud: "gcp", block: 13, optional: true, kind: "stretch", title: "Try one slice on real Google Cloud", detail: "Set a budget alert first. Deploy the file-landing slice on the free tier, compare it with the emulator, then delete it.", done: "You have notes on what differed, and nothing is left running.", tags: ["Real cloud"] },
+
+    // Azure: leads data integration
+    { id: "az-01", cloud: "azure", block: 1, title: "Land the Parquet files in Azure Data Lake", detail: "Install the Azure CLI and the Floci CLI (`floci az setup`). Upload the same partitions to the `demo` container with the `azure-storage-file-datalake` client.", done: "The same `raw/orders/dt=…` layout exists in Azure, and you've noted three differences from Cloud Storage.", tags: ["Blob Storage", "ADLS Gen2"] },
+    { id: "az-02", cloud: "azure", block: 2, title: "Serve the marts from Azure SQL", detail: "Load the dbt marts into the emulator's Azure SQL or PostgreSQL and run the revenue-by-day query.", done: "Revenue matches BigQuery to the cent.", tags: ["Azure SQL", "PostgreSQL"] },
+    { id: "az-03", cloud: "azure", block: 3, title: "Keep the run log in Table Storage", detail: "Write each pipeline run (date, status, row counts) to the `demo` table, with a partition key and row key you can explain.", done: "Each run adds a row, and a short note compares the key design with DynamoDB's.", tags: ["Table Storage"] },
+    { id: "az-04", cloud: "azure", block: 4, title: "Trigger a Function on new files", detail: "A new blob fires Event Grid, which runs an Azure Function that validates the file and queues a message on the `demo` storage queue.", done: "A good file produces a queue message; a bad file is rejected.", tags: ["Functions", "Event Grid", "Queue Storage"] },
+    { id: "az-05", cloud: "azure", block: 5, title: "Publish order events to Service Bus", detail: "Create an `orders` topic with billing and analytics subscriptions, each with its own filter. Define the event with a JSON Schema.", done: "Each subscriber gets only its filtered events, and the producer rejects events that break the schema.", tags: ["Service Bus", "JSON Schema"] },
+    { id: "az-06", cloud: "azure", block: 5, title: "Build an idempotent consumer", detail: "Load events into the warehouse using the order ID as an idempotency key. Failed messages retry, then go to the dead-letter queue.", done: "Sending an event twice creates one row, and a malformed event ends up dead-lettered.", tags: ["Service Bus"] },
+    { id: "az-07", cloud: "azure", block: 5, title: "Replay dead-lettered messages", detail: "Write a small tool that lists, fixes and resubmits messages from the dead-letter queue.", done: "A fixed message is resubmitted and processed exactly once.", tags: ["Service Bus", "Python"] },
+    { id: "az-08", cloud: "azure", block: 6, title: "Stream orders into Event Hubs over Kafka", detail: "Produce order events with a Kafka client to Event Hubs' Kafka endpoint, keyed by customer. Publish port 9093 in the compose file first.", done: "A consumer group reads every event, and each customer's events stay in order.", tags: ["Event Hubs", "Kafka"] },
+    { id: "az-09", cloud: "azure", block: 6, title: "Compute per-minute revenue on the stream", detail: "Total revenue in one-minute windows with Spark Structured Streaming or Python, and write the results to Cosmos DB.", done: "Per-minute totals in Cosmos DB update while the producer runs.", tags: ["Cosmos DB", "Streaming"] },
+    { id: "az-10", cloud: "azure", block: 6, title: "Handle late and duplicate events", detail: "Add event-time watermarks and de-duplication, then replay a batch of old events.", done: "Replaying doesn't double-count, and late events land in the right minute.", tags: ["Streaming"] },
+    { id: "az-11", cloud: "azure", block: 7, title: "Capture database changes with Debezium", detail: "Stream inserts, updates and deletes from the emulator's Azure PostgreSQL to Kafka or Event Hubs with Debezium.", done: "An update in the database appears as a change event within seconds.", tags: ["Debezium", "CDC", "PostgreSQL"] },
+    { id: "az-12", cloud: "azure", block: 7, title: "Merge changes into a current-state table", detail: "Land change events in the data lake as Parquet, then merge them into a current-state orders table.", done: "After inserts, updates and deletes, the table matches the source database exactly.", tags: ["CDC", "Data lake"] },
+    { id: "az-13", cloud: "azure", block: 7, title: "Build an API ingestion connector", detail: "Pull a public REST API with pagination, rate-limit handling and retries with exponential backoff. Store raw JSON in the data lake and keep a watermark for incremental runs.", done: "A rerun fetches only new records, and a simulated 429 response is retried.", tags: ["REST", "Functions"] },
+    { id: "az-14", cloud: "azure", block: 8, title: "Sync files across all three clouds", detail: "Copy new files from S3 to Azure and Cloud Storage with checksum checks, a dead-letter queue and a replay command.", done: "Every synced file's checksum matches, and a forced failure can be replayed.", tags: ["Blob Storage", "S3", "Cloud Storage"] },
+    { id: "az-15", cloud: "azure", block: 8, title: "Move secrets to Key Vault", detail: "Read credentials from Key Vault and settings from App Configuration, so nothing sensitive stays in code.", done: "A search of the repo finds no keys or connection strings.", tags: ["Key Vault", "App Configuration"] },
+    { id: "az-16", cloud: "azure", block: 8, title: "Change the event schema safely", detail: "Add a field in version 2 of the order event while version 1 consumers keep working, and add a contract test.", done: "Both versions are processed, and the contract test fails on a breaking change.", tags: ["Data contracts"] },
+    { id: "az-17", cloud: "azure", block: 8, title: "Publish the phase 2 write-up", detail: "Document the integration patterns you used and how failures are handled, and record one failure and its recovery.", done: "The write-up and recording are on GitHub.", tags: ["Portfolio"] },
+    { id: "az-c1", cloud: "azure", block: 8, optional: true, kind: "cert", title: "Azure Developer Associate or Confluent Kafka Developer", detail: "Microsoft's developer exam covers Service Bus, Event Hubs and Functions; Confluent's covers Kafka streaming. Check current exam codes before booking.", done: "Exam passed.", tags: ["Certification"] },
+    { id: "az-18", cloud: "azure", block: 9, title: "Review the design with Azure's framework", detail: "Map every component to its Azure equivalent and review it against the Azure Well-Architected Framework.", done: "A mapping table and at least five findings are in the repo.", tags: ["Architecture"] },
+    { id: "az-19", cloud: "azure", block: 10, title: "Terraform the Azure resources", detail: "Use the `azurerm` provider against the emulator, following the floci-az Terraform guide. HTTPS is already turned on in your compose file.", done: "`terraform destroy` then `terraform apply` recreates the Azure resources.", tags: ["Terraform"] },
+    { id: "az-20", cloud: "azure", block: 11, title: "Add managed identities and a private network", detail: "Give each Azure component a managed identity with only the roles it needs, and put data stores in a private subnet.", done: "Each component reaches only its own resources, and a diagram shows the network.", tags: ["Managed Identity", "VNet"] },
+    { id: "az-21", cloud: "azure", block: 12, title: "Price the platform on Azure", detail: "Estimate the monthly cost at three data volumes with the Azure Pricing Calculator.", done: "A cost table with assumptions is added to the three-cloud comparison.", tags: ["Cost"] },
+    { id: "az-r1", cloud: "azure", block: 13, optional: true, kind: "stretch", title: "Try one slice on real Azure", detail: "Set a budget alert first. Deploy the file-landing slice on the free tier, compare it with the emulator, then delete it.", done: "You have notes on what differed, and nothing is left running.", tags: ["Real cloud"] },
+
+    // AWS: leads solutions architecture
+    { id: "aws-01", cloud: "aws", block: 1, title: "Land the Parquet files in S3", detail: "Install the AWS CLI, then upload the same partitions to the `demo` bucket with boto3.", done: "`aws s3 ls s3://demo/raw/orders/` shows the same partitions as Cloud Storage.", tags: ["S3", "boto3"] },
+    { id: "aws-02", cloud: "aws", block: 2, title: "Query the lake with Athena", detail: "Register the Parquet files in the Glue catalog and run the revenue-by-day query in the emulator's Athena.", done: "Athena's numbers match BigQuery's exactly.", tags: ["Athena", "Glue"] },
+    { id: "aws-03", cloud: "aws", block: 3, title: "Track runs and watermarks in DynamoDB", detail: "Write each run to the `demo` table and read the last successful date as the next run's starting point.", done: "A new run picks up exactly where the last one stopped.", tags: ["DynamoDB"] },
+    { id: "aws-04", cloud: "aws", block: 4, title: "Trigger a Lambda on new S3 files", detail: "An S3 upload invokes a Lambda that validates the file and sends a message to the `demo` SQS queue.", done: "A good file produces a queue message; a bad file is rejected.", tags: ["Lambda", "S3", "SQS"] },
+    { id: "aws-05", cloud: "aws", block: 5, title: "Fan out order events with SNS and SQS", detail: "Publish the order event to SNS, fan it out to two SQS queues, and add a dead-letter queue with a redrive policy.", done: "Duplicates are ignored, and malformed events land in the dead-letter queue.", tags: ["SNS", "SQS"] },
+    { id: "aws-06", cloud: "aws", block: 6, title: "Deliver the stream to S3 with Firehose", detail: "Send order events through Firehose, or the emulator's MSK Kafka, into time-partitioned files in S3.", done: "Batched files appear in S3, and their totals match the Azure stream.", tags: ["Firehose", "MSK"] },
+    { id: "aws-07", cloud: "aws", block: 7, title: "Run the API connector on a schedule", detail: "Run the connector as a Lambda on an EventBridge schedule, writing raw JSON to S3.", done: "A scheduled run fetches only records it hasn't seen before.", tags: ["Lambda", "EventBridge"] },
+    { id: "aws-08", cloud: "aws", block: 8, title: "Move AWS config to Secrets Manager", detail: "Keep credentials in Secrets Manager and settings in SSM Parameter Store.", done: "No AWS keys or settings are hard-coded.", tags: ["Secrets Manager", "SSM"] },
+    { id: "aws-09", cloud: "aws", block: 9, title: "Run a Well-Architected review", detail: "Review the AWS version of the platform against the six pillars and list the risks with priorities.", done: "A review with at least ten prioritized findings is in the repo.", tags: ["Well-Architected"] },
+    { id: "aws-10", cloud: "aws", block: 9, title: "Write architecture decision records", detail: "Record five decisions from months 1–4, such as DuckDB vs Spark, Service Bus vs Event Hubs, and how you made reruns safe.", done: "Five records are in `docs/adr`, each with context, options and consequences.", tags: ["Decision records"] },
+    { id: "aws-11", cloud: "aws", block: 9, title: "Draw C4 diagrams", detail: "Draw context and container diagrams as code, in Mermaid or Structurizr, covering all three clouds.", done: "The diagrams render in the repo and match what actually runs.", tags: ["C4", "Diagrams"] },
+    { id: "aws-12", cloud: "aws", block: 10, title: "Terraform the AWS stack", detail: "Define S3, SQS, SNS, DynamoDB, Lambda and IAM roles in Terraform against the emulator, replacing `create-demo-resources.ps1`.", done: "`terraform destroy` then `terraform apply` recreates everything, and the pipeline still runs.", tags: ["Terraform"] },
+    { id: "aws-13", cloud: "aws", block: 10, title: "Use modules and environments", detail: "Pull out a reusable module and deploy dev and test copies side by side with different name prefixes.", done: "Two environments run at once without clashing.", tags: ["Terraform"] },
+    { id: "aws-14", cloud: "aws", block: 10, title: "Add CI for infrastructure", detail: "A GitHub Actions workflow runs `terraform fmt`, `validate`, `plan` and a scanner such as Checkov on every pull request.", done: "Pull requests show the plan, and a deliberate misconfiguration fails the check.", tags: ["GitHub Actions", "Checkov"] },
+    { id: "aws-15", cloud: "aws", block: 11, title: "Enforce least-privilege IAM", detail: "Turn on S3 auth checks with `FLOCI_SERVICES_S3_ENFORCE_AUTH=true` and give each component its own role and policy.", done: "The pipeline still runs, and a component can't read a bucket it doesn't own.", tags: ["IAM"] },
+    { id: "aws-16", cloud: "aws", block: 11, title: "Encrypt data with KMS", detail: "Use your own KMS keys for S3, DynamoDB and Secrets Manager, with key rotation turned on.", done: "Objects and tables report your KMS key.", tags: ["KMS"] },
+    { id: "aws-17", cloud: "aws", block: 11, title: "Design the network", detail: "Build a VPC with public and private subnets, security groups and endpoints in Terraform, keeping data stores private.", done: "Terraform applies cleanly, and a diagram shows every allowed traffic path.", tags: ["VPC", "Terraform"] },
+    { id: "aws-18", cloud: "aws", block: 12, title: "Run reliability drills", detail: "Set recovery targets (RPO and RTO), turn on S3 versioning and DynamoDB backups, then stop containers mid-run.", done: "A runbook records the measured recovery time and shows no data was lost.", tags: ["Reliability"] },
+    { id: "aws-19", cloud: "aws", block: 12, title: "Build the three-cloud cost model", detail: "Estimate AWS cost at three data volumes with the AWS Pricing Calculator and combine it with the Azure and GCP estimates.", done: "One table compares all three clouds, with assumptions and three ways to save.", tags: ["Cost"] },
+    { id: "aws-20", cloud: "aws", block: 12, title: "Plan a migration", detail: "Pick a migration strategy (rehost, replatform, refactor and so on) for each component when moving to a real AWS account.", done: "A plan with the order, risks and rollback for each step.", tags: ["Migration"] },
+    { id: "aws-21", cloud: "aws", block: 12, title: "Write the final solution design", detail: "Cover requirements, architecture, trade-offs, security, cost and operations in one document of ten pages or fewer.", done: "The design is in the repo and links your decision records and diagrams.", tags: ["Design doc"] },
+    { id: "aws-c1", cloud: "aws", block: 12, optional: true, kind: "cert", title: "AWS Solutions Architect – Associate", detail: "The most widely recognised cloud architect certification. Check the current exam code before booking.", done: "Exam passed.", tags: ["Certification"] },
+    { id: "aws-r1", cloud: "aws", block: 13, optional: true, kind: "stretch", title: "Try one slice on real AWS", detail: "Set a budget alert first. Deploy the file-landing slice on the free tier, compare it with the emulator, then delete it.", done: "You have notes on what differed, and nothing is left running.", tags: ["Real cloud"] }
+  ];
+
+  // ---------- Step-by-step guides (Weeks 1–2) ----------
+  // Steps: ["p", text] ["h", heading] ["label", text] ["code", commands] ["out", expected output]
+  //        ["try", exercise] ["warn", [title, text...]] ["list", [items]]
+  // Expected output comes from test runs against the Floci emulators. The code is in this lab's pipeline folder.
+  var SETUP = String.raw`cd orders-platform
+.\.venv\Scripts\Activate.ps1
+. <lab>\floci-env.ps1`;
+
+  var GUIDES = {
+    "sh-01": { day: "Week 1", steps: [
+      ["p", "Install Python 3.11 or newer, Git, VS Code and Docker Desktop. Then check them in a new terminal:"],
+      ["code", String.raw`python --version
+git --version
+docker --version`],
+      ["p", "Each prints a version number. On macOS or Linux, use `python3` if `python` isn't found."]
+    ] },
+    "sh-03": { day: "Week 1", steps: [
+      ["p", "Starts all three emulators, then creates nine `demo` resources. Run it again whenever Docker has restarted; it's safe to repeat. The script needs PowerShell 7 (`pwsh`), which also runs on macOS and Linux."],
+      ["code", String.raw`cd floci-labs\labs\three-cloud-data-platform
+docker compose up -d
+pwsh ./create-demo-resources.ps1`],
+      ["out", String.raw`What exists now:
+AWS    S3 buckets             demo
+AWS    SQS queues             demo
+AWS    DynamoDB tables        demo
+Azure  Blob containers        demo
+Azure  Storage queues         demo
+Azure  Tables                 demo
+GCP    Storage buckets        demo
+GCP    Pub/Sub topics         demo
+GCP    Pub/Sub subscriptions  demo`]
+    ] },
+    "sh-02": { day: "Week 1", steps: [
+      ["p", "Make your own copy of the reference code so your work has a home on GitHub. `<lab>` means this lab's folder, for example `floci-labs\\labs\\three-cloud-data-platform`."],
+      ["code", String.raw`Copy-Item -Recurse <lab>\pipeline orders-platform
+cd orders-platform
+git init -b main
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt`],
+      ["p", "On macOS or Linux, use `cp -r <lab>/pipeline orders-platform` for the first line and `source .venv/bin/activate` instead of the `Activate.ps1` line. Then write a README and push:"],
+      ["code", String.raw`code README.md
+git add .
+git commit -m "Generator and landing scripts for GCP, Azure and AWS"
+gh repo create orders-platform --private --source . --push`],
+      ["try", "Write the README yourself: what the project is, the three setup lines, and the order to run the scripts: `generate.py`, `to_parquet.py`, then a `land_*.py` script. You'll add to it every week."],
+      ["p", "Generated data and `.venv` stay out of Git (see `.gitignore`), because anyone can rebuild them from the code."]
+    ] },
+    "gcp-01": { day: "Week 1", setup: true, steps: [
+      ["code", "python gcp_check.py"],
+      ["out", String.raw`Project:       floci-local
+Cloud Storage: http://localhost:4588
+Pub/Sub:       localhost:4588
+
+Buckets:       demo
+Topics:        demo
+Subscriptions: demo
+
+OK: the 'demo' bucket and topic are both there.`],
+      ["p", "`floci-env.ps1` sets `STORAGE_EMULATOR_HOST` and `PUBSUB_EMULATOR_HOST`. When the Google libraries see them, they skip sign-in and talk to localhost: Cloud Storage over plain HTTP, Pub/Sub over unencrypted gRPC. Nothing in the script mentions the emulator, so the same code would run against real GCP."],
+      ["try", "Add a step to `gcp_check.py` that publishes `hello` to the `demo` topic, then pulls it from the `demo` subscription and acknowledges it. You need `publisher.publish(topic_path, b\"hello\").result()`, then `subscriber.pull(...)` and `subscriber.acknowledge(...)`."],
+      ["p", "The gcloud CLI can wait; Python covers this task."]
+    ] },
+    "gcp-02": { day: "Week 2 · day 1", setup: true, steps: [
+      ["code", "python generate.py --date 2026-11-02 --days 7"],
+      ["out", String.raw`2026-11-02: 114 orders, 300 customers, 40 products -> data\jsonl\dt=2026-11-02
+2026-11-03:  86 orders, 300 customers, 40 products -> data\jsonl\dt=2026-11-03
+2026-11-04:  90 orders, 300 customers, 40 products -> data\jsonl\dt=2026-11-04
+2026-11-05: 109 orders, 300 customers, 40 products -> data\jsonl\dt=2026-11-05
+2026-11-06:  88 orders, 300 customers, 40 products -> data\jsonl\dt=2026-11-06
+2026-11-07: 154 orders, 300 customers, 40 products -> data\jsonl\dt=2026-11-07
+2026-11-08: 150 orders, 300 customers, 40 products -> data\jsonl\dt=2026-11-08`],
+      ["p", "Every random choice comes from a `random.Random` seeded with fixed text, such as `orders-2026-11-02`. Text seeds give the same numbers on every run and every machine, so a date always produces the same file. That's what lets row counts match exactly across three clouds."],
+      ["p", "Weekends get about 40 more orders. A quarter of customers move house on a set day during the six months, and `customers.jsonl` shows each customer as they were that day. In weeks 3–4 that becomes customer history (SCD Type 2)."],
+      ["label", "Prove it repeats: the two hashes match"],
+      ["code", String.raw`(Get-FileHash data\jsonl\dt=2026-11-02\orders.jsonl).Hash
+python generate.py --date 2026-11-02
+(Get-FileHash data\jsonl\dt=2026-11-02\orders.jsonl).Hash`],
+      ["try", "Add a `channel` field to each order: `web`, `app` or `store`, weighted 60/30/10. Check the hashes still repeat, then add the column to the orders schema in `to_parquet.py`."]
+    ] },
+    "gcp-03": { day: "Week 2 · days 2–3", setup: true, steps: [
+      ["h", "Day 2 · Convert each day to Parquet"],
+      ["code", "python to_parquet.py"],
+      ["out", String.raw`dt=2026-11-02: 114 orders, 300 customers, 40 products
+dt=2026-11-03: 86 orders, 300 customers, 40 products
+…five more days…`],
+      ["p", "Each table has a written schema. Prices are `decimal(10,2)`, so revenue sums are exact to the cent; floats would drift. Order times are UTC timestamps and dates are real dates, not text."],
+      ["p", "Files go to `data/parquet/orders/dt=2026-11-02/orders.parquet`. The date is in the folder name, not in the file. This is Hive-style partitioning: BigQuery, Athena, Spark and dbt read the date from the path, so a query for one day only opens that day's folder."],
+      ["label", "Look inside one file: expect 114 rows"],
+      ["code", String.raw`python -c "import pyarrow.parquet as pq; t = pq.read_table('data/parquet/orders/dt=2026-11-02/orders.parquet'); print(t.schema); print(t.num_rows, 'rows')"
+Get-ChildItem data\jsonl\dt=2026-11-02\orders.jsonl, data\parquet\orders\dt=2026-11-02\orders.parquet | Select-Object Name, Length`],
+      ["try", "Change `unit_price` to `pa.float64()`, rebuild, and sum quantity × unit_price for one day. Compare it with the decimal version, then put the decimal back."],
+      ["h", "Day 3 · Land the raw zone in Cloud Storage"],
+      ["code", "python land_gcs.py"],
+      ["out", String.raw`Uploading 21 files to gs://demo ... done
+
+Checking gs://demo/raw/ against the generator
+  file                                          generator  stored
+  raw/customers/dt=2026-11-02/customers.parquet       300     300  ok
+  …
+  raw/orders/dt=2026-11-02/orders.parquet             114     114  ok
+  …
+All 21 files match the generator (7 days of orders, customers, products).`],
+      ["p", "The check doesn't trust the upload. It lists what's really in the bucket under `raw/`, downloads each file, reads the row count from the Parquet footer and compares it with the lines the generator wrote."],
+      ["p", "`lake.py` holds those steps once. Each cloud script only supplies three small functions: upload, list and download. Open `land_gcs.py`, `land_adls.py` and `land_s3.py` side by side to see exactly where the clouds differ."],
+      ["try", "Add a day and land again: `python generate.py --date 2026-11-09`, `python to_parquet.py`, `python land_gcs.py`. The check should now report 24 files over 8 days."]
+    ] },
+    "az-01": { day: "Week 2 · day 4", setup: true, steps: [
+      ["p", "Do gcp-02 and gcp-03 first: this uploads the same Parquet files."],
+      ["code", "python land_adls.py"],
+      ["out", String.raw`Uploading 21 files to devstoreaccount1/demo ... done
+…
+All 21 files match the generator (7 days of orders, customers, products).`],
+      ["warn", ["Emulator quirk, already handled",
+        "The Azure emulator only treats a request as Data Lake when it's addressed to `devstoreaccount1.dfs.core.windows.net`, as in real Azure. Sent to plain `localhost:4577`, the append, flush and list calls fail with `501 Not Implemented`.",
+        "`land_adls.py` connects to localhost and puts that name in the `Host` header. The address stays localhost, so nothing reaches the internet. Don't switch the client to the real `core.windows.net` address to fix an error: that sends requests to real Azure."]],
+      ["try", "Write three differences from Cloud Storage in your README. That's this task's done check. Things to look at:"],
+      ["list", [
+        "Data Lake has real folders. Cloud Storage and S3 only have keys that contain slashes.",
+        "Azure calls a container a \"file system\", and an upload is three calls: create, append, flush.",
+        "How each signs in: an account key in a connection string versus Google's emulator variable.",
+        "Folder listings: Data Lake returns directories as entries too."
+      ]],
+      ["p", "The Azure CLI and Floci CLI aren't needed for this. They're large installs, so you can leave them until weeks 3–4."]
+    ] },
+    "aws-01": { day: "Week 2 · day 5", setup: true, steps: [
+      ["code", "python land_s3.py"],
+      ["out", String.raw`S3 endpoint: http://localhost:4566
+
+Uploading 21 files to s3://demo ... done
+…
+All 21 files match the generator (7 days of orders, customers, products).`],
+      ["p", "boto3 reads `AWS_ENDPOINT_URL` from `floci-env.ps1`, so the code needs no endpoint setting. S3 returns at most 1,000 keys per list call, so `list_keys` uses a paginator. `upload_file` switches to multipart upload on its own for big files."],
+      ["label", "List the partitions"],
+      ["code", String.raw`python -c "import boto3; [print(o['Key']) for o in boto3.client('s3').list_objects_v2(Bucket='demo', Prefix='raw/orders/')['Contents']]"`],
+      ["p", "The done check uses `aws s3 ls s3://demo/raw/orders/`. Without the AWS CLI, the line above shows the same thing."],
+      ["label", "Wrap up the block"],
+      ["code", String.raw`git add .
+git commit -m "Land raw zone in GCS, ADLS and S3"
+git push`],
+      ["p", "Then tick every Weeks 1–2 task here and on the overview. That closes the first block."]
+    ] }
+  };
+
+  function phaseOf(block) {
+    for (var i = 0; i < PHASES.length; i++) if (block >= PHASES[i].from && block <= PHASES[i].to) return PHASES[i];
+    return PHASES[PHASES.length - 1];
+  }
+  TASKS.forEach(function (t) {
+    if (!t.kind) t.kind = t.cloud === "shared" ? "shared" : (phaseOf(t.block).lead === t.cloud ? "lead" : "port");
+  });
+  var TASK_IDS = {};
+  TASKS.forEach(function (t) { TASK_IDS[t.id] = true; });
+
+  // ---------- Saved state ----------
+  var storageOk = true;
+  try { localStorage.setItem(KEY + ".probe", "1"); localStorage.removeItem(KEY + ".probe"); } catch (e) { storageOk = false; }
+
+  function isISO(v) {
+    if (typeof v !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return false;
+    var d = parseISO(v);
+    return !isNaN(d.getTime()) && iso(d) === v;
+  }
+  function safeUrl(v) {
+    if (typeof v !== "string" || v.length > 500 || !/^https?:\/\//i.test(v)) return false;
+    try { new URL(v); return true; } catch (e) { return false; }
+  }
+  function clean(s) {
+    s = s && typeof s === "object" ? s : {};
+    var done = {}, proof = {}, k;
+    if (s.done && typeof s.done === "object") for (k in s.done) if (TASK_IDS[k] && isISO(s.done[k])) done[k] = s.done[k];
+    if (s.proof && typeof s.proof === "object") for (k in s.proof) if (TASK_IDS[k] && safeUrl(s.proof[k])) proof[k] = s.proof[k];
+    return {
+      done: done,
+      proof: proof,
+      name: typeof s.name === "string" ? s.name.slice(0, 60) : "",
+      start: isISO(s.start) ? s.start : DEFAULT_START,
+      filter: ["all", "todo", "done", "now"].indexOf(s.filter) >= 0 ? s.filter : "all"
+    };
+  }
+  function readStore() {
+    try { var raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : {}; } catch (e) { return {}; }
+  }
+  var state = clean(readStore());
+  if (!isISO(readStore().start)) save(); // remember the first visit's start date
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); storageOk = true; } catch (e) { storageOk = false; }
+  }
+
+  // ---------- Dates ----------
+  function parseISO(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function iso(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function addDays(d, n) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
+  function today() { var t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+  function startDate() { return parseISO(state.start); }
+  function endDate() { return addDays(startDate(), 26 * 7 - 1); }
+  function blockStart(b) { return addDays(startDate(), (b - 1) * 14); }
+  function blockEnd(b) { return addDays(startDate(), b * 14 - 1); }
+  function daysSinceStart() { return Math.round((today() - startDate()) / 86400000); }
+  function currentWeek() { var d = daysSinceStart(); return d < 0 ? 0 : Math.floor(d / 7) + 1; }
+  function currentBlock() { var w = currentWeek(); if (w < 1) return 0; if (w > 26) return 14; return Math.ceil(w / 2); }
+  var fmtD = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" });
+  var fmtY = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  function weeksLabel(b) { return "Weeks " + (2 * b - 1) + "–" + (2 * b); }
+  function rangeLabel(b) {
+    var a = blockStart(b), z = blockEnd(b);
+    return a.getMonth() === z.getMonth() ? a.getDate() + "–" + fmtD.format(z) : fmtD.format(a) + " – " + fmtD.format(z);
+  }
+  function phaseRange(p) { return fmtD.format(blockStart(p.from)) + " – " + fmtY.format(blockEnd(p.to)); }
+
+  // ---------- Progress ----------
+  function required(list) { return list.filter(function (t) { return !t.optional; }); }
+  function optionalOnly(list) { return list.filter(function (t) { return t.optional; }); }
+  function count(list) {
+    var d = list.filter(function (t) { return state.done[t.id]; }).length;
+    return { done: d, total: list.length, pct: list.length ? Math.round(d / list.length * 100) : 0 };
+  }
+  function statusOf(list) {
+    var req = required(list), cb = currentBlock(), c = count(req);
+    if (c.total && c.done === c.total) return { key: "done", label: "Complete" };
+    if (cb < 1) return { key: "upcoming", label: "Not started" };
+    var overdue = req.filter(function (t) { return t.block < cb && !state.done[t.id]; }).length;
+    if (overdue) return { key: "behind", label: overdue + " overdue", n: overdue };
+    var ahead = req.filter(function (t) { return t.block > cb && state.done[t.id]; }).length;
+    if (ahead) return { key: "ahead", label: "Ahead of schedule" };
+    return { key: "ontrack", label: "On track" };
+  }
+  function statusDetail(s) {
+    switch (s.key) {
+      case "done": return "Every required task is ticked off.";
+      case "upcoming": return "Week 1 starts " + fmtY.format(startDate()) + ".";
+      case "behind": return s.n + (s.n === 1 ? " task from an earlier block is" : " tasks from earlier blocks are") + " still open.";
+      case "ahead": return "You've already finished work from later blocks.";
+      default: return "Everything due before this block is done.";
+    }
+  }
+  function nextTasks(list, n) {
+    var open = list.filter(function (t) { return !state.done[t.id]; });
+    open.sort(function (a, b) { return (Number(!!a.optional) - Number(!!b.optional)) || (a.block - b.block); });
+    return open.slice(0, n);
+  }
+  function recentDone(list, n) {
+    return list.filter(function (t) { return state.done[t.id]; })
+      .sort(function (a, b) { return state.done[b.id] < state.done[a.id] ? -1 : state.done[b.id] > state.done[a.id] ? 1 : 0; })
+      .slice(0, n);
+  }
+
+  // ---------- Rendering helpers ----------
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
+  }
+  function rich(s) { return esc(s).replace(/`([^`]+)`/g, "<code>$1</code>"); }
+  function cloudStyle(k) {
+    if (k === "shared" || !k) return "--c: var(--ink); --c-soft: var(--surface-2); --on-c: var(--bg)";
+    return "--c: var(--" + k + "); --c-soft: var(--" + k + "-soft); --on-c: var(--on-color)";
+  }
+  function bar(pct, label) {
+    return '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="' + esc(label) + '"><span style="width:' + pct + '%"></span></div>';
+  }
+  function pill(s) { return '<span class="pill ' + s.key + '">' + esc(s.label) + "</span>"; }
+  var KIND_LABEL = { lead: "Lead build", port: "Port", shared: "Shared", cert: "Certification", stretch: "Stretch" };
+
+  var openGuides = {}; // keeps a guide open when the page redraws after a tick
+  function gCode(v) {
+    return '<div class="g-code"><pre>' + esc(v) + '</pre><button type="button" class="g-copy" data-action="copy-code">Copy</button></div>';
+  }
+  function gStep(s) {
+    var k = s[0], v = s[1];
+    if (k === "p") return "<p>" + rich(v) + "</p>";
+    if (k === "h") return "<h4>" + esc(v) + "</h4>";
+    if (k === "label") return '<p class="g-label">' + esc(v) + "</p>";
+    if (k === "code") return gCode(v);
+    if (k === "out") return '<p class="g-label">You should see</p><div class="g-code g-out"><pre>' + esc(v) + "</pre></div>";
+    if (k === "try") return '<div class="g-try"><p class="g-label">Make it yours</p><p>' + rich(v) + "</p></div>";
+    if (k === "warn") return '<div class="g-warn"><p class="g-label">' + esc(v[0]) + "</p>" + v.slice(1).map(function (x) { return "<p>" + rich(x) + "</p>"; }).join("") + "</div>";
+    if (k === "list") return "<ul>" + v.map(function (x) { return "<li>" + rich(x) + "</li>"; }).join("") + "</ul>";
+    return "";
+  }
+  function guideHTML(t) {
+    var g = GUIDES[t.id];
+    if (!g) return "";
+    var body = (g.setup ? '<p class="g-label">In a new terminal</p>' + gCode(SETUP) +
+      '<p class="sub">Replace <code>&lt;lab&gt;</code> with this lab\'s folder. On macOS or Linux, use <code>source .venv/bin/activate</code> and <code>source &lt;lab&gt;/floci-env.sh</code>.</p>' : "") + g.steps.map(gStep).join("");
+    return '<details class="guide" data-id="' + t.id + '"' + (openGuides[t.id] ? " open" : "") + ">" +
+      '<summary>How to do it <span class="guide-day">' + esc(g.day) + "</span></summary>" +
+      '<div class="guide-body">' + body + "</div></details>";
+  }
+
+  function taskHTML(t) {
+    var done = !!state.done[t.id];
+    var cb = currentBlock();
+    var overdue = !done && !t.optional && cb >= 1 && t.block < cb;
+    var badges = '<span class="badge ' + t.kind + '">' + KIND_LABEL[t.kind] + "</span>";
+    if (t.optional) badges += '<span class="badge optional">Optional</span>';
+    if (overdue) badges += '<span class="badge overdue">Overdue</span>';
+    var tags = (t.tags || []).map(function (x) { return '<span class="tag">' + esc(x) + "</span>"; }).join("");
+    var proof = state.proof[t.id];
+    return '<li class="task' + (done ? " is-done" : "") + '" id="task-' + t.id + '" style="' + cloudStyle(t.cloud) + '">' +
+      '<input type="checkbox" class="task-check" id="cb-' + t.id + '" data-id="' + t.id + '"' + (done ? " checked" : "") + ' aria-describedby="dw-' + t.id + '">' +
+      '<div class="task-body">' +
+        '<div class="task-top"><label class="task-title" for="cb-' + t.id + '">' + esc(t.title) + '</label><span class="task-badges">' + badges + "</span></div>" +
+        '<p class="task-detail">' + rich(t.detail) + "</p>" +
+        '<p class="task-dw" id="dw-' + t.id + '"><span>Done when</span>' + rich(t.done) + "</p>" +
+        guideHTML(t) +
+        '<div class="task-foot">' +
+          (tags ? '<span class="tags">' + tags + "</span>" : "") +
+          (done ? '<span class="completed">Completed ' + esc(fmtY.format(parseISO(state.done[t.id]))) + "</span>" : "") +
+          (proof ? '<a class="proof-link" href="' + esc(proof) + '" target="_blank" rel="noopener noreferrer">Proof ↗</a>' : "") +
+          '<button type="button" class="link-btn" data-action="proof" data-id="' + t.id + '" aria-expanded="false" aria-controls="pf-wrap-' + t.id + '">' + (proof ? "Edit proof link" : "Add proof link") + "</button>" +
+        "</div>" +
+        '<form class="proof-form" id="pf-wrap-' + t.id + '" data-id="' + t.id + '" hidden>' +
+          '<label class="sr" for="pf-' + t.id + '">Proof link for ' + esc(t.title) + "</label>" +
+          '<input type="url" id="pf-' + t.id + '" value="' + esc(proof || "") + '" placeholder="https://github.com/you/orders-platform/…">' +
+          '<button type="submit" class="btn">Save link</button>' +
+          (proof ? '<button type="button" class="btn" data-action="proof-clear" data-id="' + t.id + '">Remove</button>' : "") +
+          '<span class="form-msg" role="status"></span>' +
+        "</form>" +
+      "</div></li>";
+  }
+
+  // ---------- Overview page ----------
+  function cloudCard(k) {
+    var c = CLOUDS[k];
+    var list = TASKS.filter(function (t) { return t.cloud === k; });
+    var s = count(required(list));
+    var nx = nextTasks(list, 1)[0];
+    return '<a class="cloud-card" href="#' + k + '" style="' + cloudStyle(k) + '">' +
+      '<div class="cc-top"><span class="monogram" aria-hidden="true">' + c.mono + '</span><div class="cc-name"><h3>' + c.name + "</h3><p>" + c.full + '</p></div><span class="cc-pct">' + s.pct + "<small>%</small></span></div>" +
+      '<p class="cc-role">' + c.role + "</p>" +
+      bar(s.pct, c.name + " progress") +
+      '<div class="cc-meta"><span>' + s.done + " of " + s.total + " tasks done</span>" + pill(statusOf(list)) + "</div>" +
+      '<div class="cc-next"><span class="eyebrow">Next up</span>' +
+        (nx ? "<p>" + esc(nx.title) + '</p><span class="sub">' + weeksLabel(nx.block) + " · " + KIND_LABEL[nx.kind] + "</span>" : "<p>Every task is done.</p>") +
+      "</div>" +
+      '<div class="cc-foot"><span class="mono">' + esc(c.endpoint) + '</span><span class="cc-open">Open ' + c.name + " track →</span></div>" +
+    "</a>";
+  }
+
+  function trackMap() {
+    var cb = currentBlock();
+    var h = '<div class="tm-scroll"><div class="tm">';
+    h += '<div class="tm-corner"></div>';
+    PHASES.forEach(function (p) {
+      h += '<div class="tm-phase" style="grid-column: span ' + (p.to - p.from + 1) + "; " + cloudStyle(p.lead) + '">' + esc(p.name) +
+        (p.lead ? ' <span class="tm-lead">' + CLOUDS[p.lead].name + " leads</span>" : "") + "</div>";
+    });
+    h += '<div class="tm-corner"></div>';
+    for (var b = 1; b <= 13; b++) {
+      h += '<div class="tm-week' + (b === cb ? " is-now" : "") + '">W' + (2 * b - 1) + "–" + (2 * b) + (b === cb ? '<span class="tm-now">Now</span>' : "") + "</div>";
+    }
+    ORDER.forEach(function (k) {
+      h += '<a class="tm-label" href="#' + k + '" style="' + cloudStyle(k) + '"><i aria-hidden="true"></i>' + CLOUDS[k].name + "</a>";
+      for (var b2 = 1; b2 <= 13; b2++) {
+        var req = TASKS.filter(function (t) { return t.cloud === k && t.block === b2 && !t.optional; });
+        var c = count(req);
+        var kind = req.length ? req[0].kind : "none";
+        var desc = CLOUDS[k].name + ", " + weeksLabel(b2) + ": " + (req.length ? (kind === "lead" ? "lead build" : "port") + ", " + c.done + " of " + c.total + " done" : "optional tasks only");
+        h += '<div class="tm-cell' + (b2 === cb ? " is-now" : "") + '" style="' + cloudStyle(k) + '" title="' + esc(desc) + '"><span class="tm-bar ' + kind + '" style="--p:' + c.pct + '%"><span class="sr">' + esc(desc) + "</span></span></div>";
+      }
+    });
+    h += "</div></div>";
+    h += '<div class="legend"><span><i class="l-lead"></i>Lead build</span><span><i class="l-port"></i>Port to this cloud</span><span><i class="l-fill"></i>Filled part is done</span><span><i class="l-none"></i>Optional tasks only</span></div>';
+    return h;
+  }
+
+  function phaseCard(p) {
+    var reading = p.reading.map(function (r) {
+      return "<li>" + (r.u ? '<a href="' + esc(r.u) + '" target="_blank" rel="noopener noreferrer">' + esc(r.t) + "</a>" : esc(r.t)) + "</li>";
+    }).join("");
+    return '<article class="panel phase-card" style="' + cloudStyle(p.lead) + '">' +
+      '<p class="eyebrow">' + p.months + " · " + esc(phaseRange(p)) + "</p>" +
+      "<h3>" + esc(p.name) + "</h3>" +
+      (p.lead ? '<span class="lead-chip"><i aria-hidden="true"></i>' + CLOUDS[p.lead].name + " leads, the other two port</span>" : '<span class="lead-chip">All three clouds</span>') +
+      "<p>" + esc(p.goal) + "</p>" +
+      '<ul class="reading" aria-label="Read alongside">' + reading + "</ul>" +
+      (p.cert ? '<p class="cert-line">Optional certification: ' + esc(p.cert) + "</p>" : "") +
+    "</article>";
+  }
+
+  function storageText() {
+    return storageOk
+      ? "Progress is saved in this browser only. Copy a backup now and then, or to move to another browser."
+      : "This browser isn't saving progress, which happens in private windows or when site data is blocked. Copy a backup before you close the page.";
+  }
+
+  function renderOverview() {
+    var all = TASKS;
+    var s = count(required(all));
+    var so = count(optionalOnly(all));
+    var st = statusOf(all);
+    var w = currentWeek(), cb = currentBlock();
+    var weekText = w < 1 ? "Not started" : w > 26 ? "Finished" : "Week " + w + " <small>of 26</small>";
+    var nowText = cb < 1 ? "Week 1 starts " + fmtY.format(startDate()) : cb > 13 ? "All 26 weeks are over" : "Now: " + weeksLabel(cb) + ", " + BLOCKS[cb];
+    var shared = TASKS.filter(function (t) { return t.cloud === "shared"; });
+
+    return '<section class="hero">' +
+        '<p class="eyebrow">' + (state.name ? esc(state.name) + " · " : "") + "Cloud learning tracker</p>" +
+        "<h1>Six months, three clouds, one data platform</h1>" +
+        '<p class="lede">A hands-on plan for data engineering, data integration and solutions architecture. Each phase is built in full on one lead cloud and then ported to the other two, all against local emulators.</p>' +
+      "</section>" +
+      '<section class="summary" aria-label="Progress summary">' +
+        '<div class="stat"><span class="eyebrow">Schedule</span><strong>' + weekText + '</strong><span class="sub">' + fmtD.format(startDate()) + " – " + fmtY.format(endDate()) + "</span></div>" +
+        '<div class="stat"><span class="eyebrow">Overall</span><strong>' + s.pct + "<small>%</small></strong>" + bar(s.pct, "Overall progress") + "</div>" +
+        '<div class="stat"><span class="eyebrow">Tasks done</span><strong>' + s.done + " <small>of " + s.total + '</small></strong><span class="sub">Optional: ' + so.done + " of " + so.total + "</span></div>" +
+        '<div class="stat"><span class="eyebrow">Status</span>' + pill(st) + '<span class="sub">' + esc(nowText) + "</span></div>" +
+      "</section>" +
+      '<section aria-labelledby="clouds-h">' +
+        '<div class="section-head"><h2 id="clouds-h">Three tracks</h2><p>Open a cloud to see its progress report and schedule, and tick off tasks.</p></div>' +
+        '<div class="clouds">' + ORDER.map(cloudCard).join("") + "</div>" +
+      "</section>" +
+      '<section aria-labelledby="map-h">' +
+        '<div class="section-head"><h2 id="map-h">Six months at a glance</h2><p>Thirteen two-week blocks. The lead role rotates: GCP, then Azure, then AWS.</p></div>' +
+        trackMap() +
+      "</section>" +
+      '<section aria-labelledby="phases-h">' +
+        '<div class="section-head"><h2 id="phases-h">How the phases work</h2><p>Lead blocks are the deep work. Port tasks repeat the build on the other two clouds, which is where you learn how they differ.</p></div>' +
+        '<div class="phases">' + PHASES.map(phaseCard).join("") + "</div>" +
+      "</section>" +
+      '<section aria-labelledby="shared-h">' +
+        '<div class="section-head"><h2 id="shared-h">Shared milestones</h2><p>Setup at the start and the capstone at the end, across all three clouds.</p></div>' +
+        '<div class="shared-grid">' +
+          '<div><h3 class="group-h">Before you start <span>Weeks 1–2</span></h3><ul class="tasks">' + shared.filter(function (t) { return t.block === 1; }).map(taskHTML).join("") + "</ul></div>" +
+          '<div><h3 class="group-h">Capstone <span>Weeks 25–26</span></h3><ul class="tasks">' + shared.filter(function (t) { return t.block === 13; }).map(taskHTML).join("") + "</ul></div>" +
+        "</div>" +
+      "</section>" +
+      '<section aria-labelledby="settings-h">' +
+        '<div class="section-head"><h2 id="settings-h">Settings and backup</h2><p>' + esc(storageText()) + "</p></div>" +
+        '<div class="settings-grid">' +
+          '<div class="panel"><label class="field" for="set-name">Your name</label><input type="text" id="set-name" maxlength="60" autocomplete="name" value="' + esc(state.name) + '" placeholder="Shown at the top of this page"><p class="hint">Appears above the headline, so the tracker can double as a portfolio page.</p></div>' +
+          '<div class="panel"><label class="field" for="set-start">Start date</label><input type="date" id="set-start" value="' + state.start + '"><p class="hint">Every week and due date is worked out from this. Week 26 ends ' + fmtY.format(endDate()) + ".</p></div>" +
+          '<div class="panel wide"><label class="field" for="backup">Backup</label>' +
+            '<textarea id="backup" rows="3" spellcheck="false" placeholder="Paste a backup here, then choose Restore."></textarea>' +
+            '<div class="btn-row"><button type="button" class="btn" data-action="copy-backup">Copy backup</button><button type="button" class="btn" data-action="restore">Restore from pasted backup</button><button type="button" class="btn danger" data-action="reset">Erase all progress</button></div>' +
+            '<p class="hint" id="backup-msg" role="status"></p>' +
+          "</div>" +
+        "</div>" +
+      "</section>";
+  }
+
+  // ---------- Cloud page ----------
+  var FILTERS = [["all", "All"], ["todo", "To do"], ["done", "Done"], ["now", "This block"]];
+
+  function renderCloud(k) {
+    var c = CLOUDS[k];
+    var list = TASKS.filter(function (t) { return t.cloud === k; });
+    var req = required(list);
+    var s = count(req), so = count(optionalOnly(list)), st = statusOf(list);
+    var cb = currentBlock();
+    var focusBlock = cb < 1 ? 1 : cb > 13 ? 13 : cb;
+    var blockTasks = list.filter(function (t) { return t.block === focusBlock; });
+    var cs = cloudStyle(k);
+
+    var phaseRows = PHASES.map(function (p) {
+      var pl = req.filter(function (t) { return t.block >= p.from && t.block <= p.to; });
+      if (!pl.length) return "";
+      var ps = count(pl);
+      var role = p.lead === k ? "lead" : "port";
+      return '<div class="phase-row"><span>' + esc(p.name) + '</span><span class="badge ' + role + '">' + (role === "lead" ? "Lead" : "Port") + "</span>" + bar(ps.pct, p.name) + '<span class="count">' + ps.done + "/" + ps.total + "</span></div>";
+    }).join("");
+
+    var next = nextTasks(list, 3).map(function (t) { return "<li>" + esc(t.title) + "<span>" + weeksLabel(t.block) + " · " + rangeLabel(t.block) + "</span></li>"; }).join("");
+    var recent = recentDone(list, 3).map(function (t) { return "<li>" + esc(t.title) + "<span>Completed " + esc(fmtY.format(parseISO(state.done[t.id]))) + "</span></li>"; }).join("");
+
+    var mini = blockTasks.map(function (t) {
+      var d = !!state.done[t.id];
+      return '<li class="' + (d ? "is-done" : "") + '"><span class="mini-check" aria-hidden="true">' + (d ? "✓" : "") + "</span><span>" + esc(t.title) + (t.optional ? " (optional)" : "") + '<span class="sr">' + (d ? ", done" : ", not done") + "</span></span></li>";
+    }).join("");
+
+    var h = '<section class="cloud-head" style="' + cs + '">' +
+        '<a class="back" href="#overview">← All three clouds</a>' +
+        '<div class="cloud-title"><span class="monogram" aria-hidden="true">' + c.mono + "</span><div>" +
+          '<p class="eyebrow">' + c.full + " · " + esc(c.endpoint) + "</p>" +
+          "<h1>" + c.name + " track</h1>" +
+          '<p class="lede">' + esc(c.summary) + "</p>" +
+        "</div></div>" +
+      "</section>";
+
+    h += '<section class="report" style="' + cs + '" aria-label="Progress report">' +
+        '<div class="panel report-main">' +
+          '<p class="eyebrow">Progress report</p>' +
+          '<div class="report-figure"><span class="big">' + s.pct + "<small>%</small></span><div><p><strong>" + s.done + " of " + s.total + '</strong> tasks done</p><p class="sub">Optional: ' + so.done + " of " + so.total + " (certification and real-cloud slice)</p></div></div>" +
+          bar(s.pct, c.name + " progress") +
+          '<div class="report-status">' + pill(st) + '<span class="sub">' + esc(statusDetail(st)) + "</span></div>" +
+          '<div class="phase-rows">' + phaseRows + "</div>" +
+        "</div>" +
+        '<div class="report-side">' +
+          '<div class="panel">' +
+            '<p class="eyebrow">' + (cb < 1 ? "First block" : cb > 13 ? "Last block" : "This block") + "</p>" +
+            "<h3>" + weeksLabel(focusBlock) + " · " + esc(BLOCKS[focusBlock]) + "</h3>" +
+            '<p class="sub">' + rangeLabel(focusBlock) + " · " + KIND_LABEL[blockTasks.length ? blockTasks[0].kind : "port"] + "</p>" +
+            '<ul class="mini">' + mini + "</ul>" +
+            '<button type="button" class="link-btn jump" data-action="jump" data-block="' + focusBlock + '">Go to this block in the schedule</button>' +
+          "</div>" +
+          '<div class="panel">' +
+            '<p class="eyebrow">Next up</p>' +
+            (next ? '<ol class="next">' + next + "</ol>" : '<p class="sub" style="margin-top:10px">Nothing left. Well done.</p>') +
+            '<p class="eyebrow recent-h">Recently completed</p>' +
+            (recent ? '<ul class="recent">' + recent + "</ul>" : '<p class="sub" style="margin-top:10px">Nothing ticked off yet. Your first task is at the top of the schedule.</p>') +
+          "</div>" +
+        "</div>" +
+      "</section>";
+
+    var filterBtns = FILTERS.map(function (f) {
+      return '<button type="button" class="chip" data-action="filter" data-filter="' + f[0] + '" aria-pressed="' + (state.filter === f[0]) + '">' + f[1] + "</button>";
+    }).join("");
+
+    var body = "";
+    PHASES.forEach(function (p) {
+      var blocksHtml = "";
+      for (var b = p.from; b <= p.to; b++) {
+        var bt = list.filter(function (t) { return t.block === b; });
+        var shown = bt.filter(function (t) {
+          if (state.filter === "todo") return !state.done[t.id];
+          if (state.filter === "done") return !!state.done[t.id];
+          if (state.filter === "now") return b === focusBlock;
+          return true;
+        });
+        if (!shown.length) continue;
+        var bc = count(required(bt));
+        var isNow = b === cb;
+        blocksHtml += '<div class="block' + (isNow ? " is-now" : "") + '" id="block-' + b + '">' +
+          '<div class="block-head"><span class="block-weeks">' + weeksLabel(b) + '</span><span class="block-dates">' + rangeLabel(b) + '</span><strong class="block-title">' + esc(BLOCKS[b]) + "</strong>" +
+          (isNow ? '<span class="pill now">This block</span>' : "") +
+          (bc.total ? '<span class="block-count">' + bc.done + "/" + bc.total + " done</span>" : '<span class="block-count">optional</span>') + "</div>" +
+          '<ul class="tasks">' + shown.map(taskHTML).join("") + "</ul></div>";
+      }
+      if (!blocksHtml) return;
+      var role = p.lead === k ? "lead" : p.lead ? "port" : "stretch";
+      var roleText = role === "lead" ? c.name + " leads this phase. Build each piece here first."
+        : role === "port" ? CLOUDS[p.lead].name + " leads this phase. Port each build here once it works there."
+        : "An optional real-cloud slice for " + c.name + ". The shared capstone tasks are on the overview.";
+      body += '<div class="phase-group">' +
+        '<div class="phase-head"><p class="eyebrow">' + p.months + " · " + esc(phaseRange(p)) + "</p>" +
+        "<h3>" + esc(p.name) + ' <span class="badge ' + role + '">' + (role === "lead" ? "Lead build" : role === "port" ? "Port" : "Optional") + "</span></h3>" +
+        '<p class="sub">' + esc(roleText) + "</p></div>" + blocksHtml + "</div>";
+    });
+    if (!body) {
+      body = '<div class="panel empty">' + (state.filter === "done" ? "No tasks ticked off yet." : "Nothing to show for this filter.") + "</div>";
+    }
+
+    h += '<section style="' + cs + '" aria-labelledby="sched-h">' +
+        '<div class="section-head"><h2 id="sched-h">Schedule and tasks</h2><div class="filters" role="group" aria-label="Show tasks">' + filterBtns + "</div></div>" +
+        body +
+      "</section>";
+
+    var i = ORDER.indexOf(k);
+    var prev = ORDER[(i + ORDER.length - 1) % ORDER.length], nxt = ORDER[(i + 1) % ORDER.length];
+    h += '<nav class="pager" aria-label="Other clouds">' +
+        '<a href="#' + prev + '" style="' + cloudStyle(prev) + '"><span class="sub">← Previous track</span><strong>' + CLOUDS[prev].name + "</strong></a>" +
+        '<a class="next-link" href="#' + nxt + '" style="' + cloudStyle(nxt) + '"><span class="sub">Next track →</span><strong>' + CLOUDS[nxt].name + "</strong></a>" +
+      "</nav>";
+    return h;
+  }
+
+  // ---------- Router ----------
+  var view = document.getElementById("view");
+  var current = "overview";
+  function viewFromHash() { var h = (location.hash || "").replace(/^#/, ""); return CLOUDS[h] ? h : "overview"; }
+  function render() {
+    view.innerHTML = current === "overview" ? renderOverview() : renderCloud(current);
+    var navs = document.querySelectorAll("[data-nav]");
+    for (var i = 0; i < navs.length; i++) {
+      if (navs[i].getAttribute("data-nav") === current) navs[i].setAttribute("aria-current", "page");
+      else navs[i].removeAttribute("aria-current");
+    }
+    document.getElementById("storage-foot").textContent = storageOk ? "Progress is saved in this browser." : "Progress isn't being saved in this browser.";
+  }
+  function rerender(focusId) {
+    var y = window.scrollY;
+    render();
+    window.scrollTo(0, y);
+    if (focusId) { var el = document.getElementById(focusId); if (el) el.focus({ preventScroll: true }); }
+  }
+  function go(target) {
+    current = target;
+    render();
+    window.scrollTo(0, 0);
+    view.focus({ preventScroll: true });
+  }
+  window.addEventListener("hashchange", function () { go(viewFromHash()); });
+  // In-page navigation also works where the address bar doesn't follow hash changes.
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var target = a.getAttribute("href").slice(1);
+    if (target !== "overview" && !CLOUDS[target]) return;
+    e.preventDefault();
+    if (location.hash !== "#" + target) { try { history.pushState(null, "", "#" + target); } catch (err) {} }
+    go(target);
+  });
+  window.addEventListener("popstate", function () { var v = viewFromHash(); if (v !== current) go(v); });
+
+  // ---------- Interactions ----------
+  var resetTimer = null;
+  function msg(text) { var m = document.getElementById("backup-msg"); if (m) m.textContent = text; }
+
+  document.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.classList && t.classList.contains("task-check")) {
+      var id = t.getAttribute("data-id");
+      if (t.checked) state.done[id] = iso(today()); else delete state.done[id];
+      save();
+      rerender("cb-" + id);
+    } else if (t.id === "set-name") {
+      state.name = t.value.trim().slice(0, 60);
+      save();
+      var eyebrow = document.querySelector(".hero .eyebrow");
+      if (eyebrow) eyebrow.textContent = (state.name ? state.name + " · " : "") + "Cloud learning tracker";
+    } else if (t.id === "set-start") {
+      if (isISO(t.value)) { state.start = t.value; save(); rerender("set-start"); }
+    }
+  });
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    var action = btn.getAttribute("data-action");
+    var id = btn.getAttribute("data-id");
+
+    if (action === "filter") {
+      state.filter = btn.getAttribute("data-filter");
+      save();
+      rerender();
+      var chip = document.querySelector('.chip[data-filter="' + state.filter + '"]');
+      if (chip) chip.focus({ preventScroll: true });
+    } else if (action === "jump") {
+      if (state.filter !== "all" && state.filter !== "now") { state.filter = "all"; save(); rerender(); }
+      var blk = document.getElementById("block-" + btn.getAttribute("data-block"));
+      if (blk) blk.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    } else if (action === "proof") {
+      var form = document.getElementById("pf-wrap-" + id);
+      var open = form.hidden;
+      form.hidden = !open;
+      btn.setAttribute("aria-expanded", String(open));
+      if (open) document.getElementById("pf-" + id).focus();
+    } else if (action === "proof-clear") {
+      delete state.proof[id];
+      save();
+      rerender("cb-" + id);
+    } else if (action === "copy-code") {
+      var pre = btn.parentNode.querySelector("pre");
+      var flash = function (text) { btn.textContent = text; setTimeout(function () { btn.textContent = "Copy"; }, 1500); };
+      var selectIt = function () {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        flash("Press Ctrl+C");
+      };
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { flash("Copied"); }, selectIt); } catch (err) { selectIt(); }
+    } else if (action === "copy-backup") {
+      var data = JSON.stringify({ app: "cloud-learning-tracker", version: 1, savedAt: iso(today()), name: state.name, start: state.start, done: state.done, proof: state.proof });
+      var ta = document.getElementById("backup");
+      ta.value = data;
+      ta.select();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(data).then(function () {
+          msg("Backup copied. Paste it somewhere safe, such as a note or your repo.");
+        }, function () { msg("The backup is selected in the box. Press Ctrl+C to copy it."); });
+      } else {
+        msg("The backup is selected in the box. Press Ctrl+C to copy it.");
+      }
+    } else if (action === "restore") {
+      var raw = document.getElementById("backup").value.trim();
+      if (!raw) { msg("Paste a backup into the box first."); return; }
+      var parsed;
+      try { parsed = JSON.parse(raw); } catch (err) { msg("That isn't a backup from this tracker. Copy the whole backup text and try again."); return; }
+      if (!parsed || typeof parsed !== "object" || typeof parsed.done !== "object") { msg("That isn't a backup from this tracker. Copy the whole backup text and try again."); return; }
+      var f = state.filter;
+      state = clean(parsed);
+      state.filter = f;
+      save();
+      rerender();
+      msg("Restored " + Object.keys(state.done).length + " completed tasks.");
+    } else if (action === "reset") {
+      if (btn.getAttribute("data-armed") !== "true") {
+        btn.setAttribute("data-armed", "true");
+        btn.textContent = "Click again to erase everything";
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () {
+          var b = document.querySelector('[data-action="reset"]');
+          if (b) { b.removeAttribute("data-armed"); b.textContent = "Erase all progress"; }
+        }, 5000);
+        return;
+      }
+      clearTimeout(resetTimer);
+      state = clean({ name: state.name, start: state.start });
+      save();
+      rerender();
+      msg("All progress erased. Your name and start date were kept.");
+    }
+  });
+
+  // "toggle" doesn't bubble, so listen in the capture phase.
+  document.addEventListener("toggle", function (e) {
+    var d = e.target;
+    if (d.classList && d.classList.contains("guide")) openGuides[d.getAttribute("data-id")] = d.open;
+  }, true);
+
+  document.addEventListener("submit", function (e) {
+    var form = e.target.closest(".proof-form");
+    if (!form) return;
+    e.preventDefault();
+    var id = form.getAttribute("data-id");
+    var val = document.getElementById("pf-" + id).value.trim();
+    var out = form.querySelector(".form-msg");
+    if (!val) { delete state.proof[id]; save(); rerender("cb-" + id); return; }
+    if (!safeUrl(val)) { out.textContent = "Use a full link that starts with https://"; return; }
+    state.proof[id] = val;
+    save();
+    rerender("cb-" + id);
+  });
+
+  current = viewFromHash();
+  render();
+})();
+</script>

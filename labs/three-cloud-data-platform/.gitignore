@@ -1,0 +1,5 @@
+# Emulator state (see docker-compose.yml)
+floci-data/
+
+# Generated pipeline data: rebuild it with generate.py
+pipeline/data/
