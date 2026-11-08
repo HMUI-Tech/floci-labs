@@ -39,6 +39,8 @@ Start the emulators and create a `demo` bucket, queue and table in each cloud:
 
 ```bash
 git clone https://github.com/floci-io/floci-labs.git
+# Not in floci-io/floci-labs yet? Clone the branch it was built on instead:
+# git clone -b lab/three-cloud-data-platform https://github.com/HMUI-Tech/floci-labs.git
 cd floci-labs/labs/three-cloud-data-platform
 docker compose up -d
 pwsh ./create-demo-resources.ps1
